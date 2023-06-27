@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+          background-color: #8A2BE2;
+          cursor: default;
+        }
+        #start { 
+            position: absolute;
+            top: 80%;
+            right: 33%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            padding: 20px 80px;
+            font-size: 40;
+            color: black;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 5px solid #6A1F8B
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .button {
+            padding: 20px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px 5px 5px 5px;
+            cursor: pointer;
+        }
+        .removed {
+            background-color: #8A2BE2;
+            padding: 21px 20px;
+            cursor: default;
+            margin: 5px;
+            border: none;
+            border-radius: 5px 5px 5px 5px;
+        }
+        #score  {
+            position: absolute;
+            top: 90%;
+            right: 14%;
+            transform: translateY(-50%);
+            padding: 10px;
+            background-color: transparent;
+            color: black;
+            border-radius: 5px 5px 5px 5px;
+        } 
+        #timer {
+            position: absolute;
+            top: 80%;
+            right: 24%;
+            transform: translateY(-50%)
+            padding: 10px;
+            background-color: transparent;
+            color: black;
+            border-radius: 5px 5px 5px 5px;
+        }
+    </style>
+</head>
+<body>
+<h1 id='timer'></h1>
+<h1 id='score'></h1>
+    <button id="start" onclick='started()'>Start</button>
+    <div id="button-container" class="button-container">
+        <button class="button" id="button1"></button>
+        <button class="button" id="button2"></button>
+        <button class="button" id="button3"></button>
+        <button class="button" id="button4"></button>
+        <button class="button" id="button5"></button>
+        <button class="button" id="button6"></button>
+        <button class="button" id="button7"></button>
+        <button class="button" id="button8"></button>
+        <button class="button" id="button9"></button>
+        <button class="button" id="button10"></button>
+        <br>
+        <button class="button" id="button11"></button>
+        <button class="button" id="button12"></button>
+        <button class="button" id="button13"></button>
+        <button class="button" id="button14"></button>
+        <button class="button" id="button15"></button>
+        <button class="button" id="button16"></button>
+        <button class="button" id="button17"></button>
+        <button class="button" id="button18"></button>
+        <button class="button" id="button19"></button>
+        <button class="button" id="button20"></button>
+        <br>
+        <button class="button" id="button21"></button>
+        <button class="button" id="button22"></button>
+        <button class="button" id="button23"></button>
+        <button class="button" id="button24"></button>
+        <button class="button" id="button25"></button>
+        <button class="button" id="button26"></button>
+        <button class="button" id="button27"></button>
+        <button class="button" id="button28"></button>
+        <button class="button" id="button29"></button>
+        <button class="button" id="button30"></button>
+        <br>
+        <button class="button" id="button31"></button>
+        <button class="button" id="button32"></button>
+        <button class="button" id="button33"></button>
+        <button class="button" id="button34"></button>
+        <button class="button" id="button35"></button>
+        <button class="button" id="button36"></button>
+        <button class="button" id="button37"></button>
+        <button class="button" id="button38"></button>
+        <button class="button" id="button39"></button>
+        <button class="button" id="button40"></button>
+        <br>
+        <button class="button" id="button41"></button>
+        <button class="button" id="button42"></button>
+        <button class="button" id="button43"></button>
+        <button class="button" id="button44"></button>
+        <button class="button" id="button45"></button>
+        <button class="button" id="button46"></button>
+        <button class="button" id="button47"></button>
+        <button class="button" id="button48"></button>
+        <br>
+    </div>
+    <script>
+        function started() {
+            var score = 0; // Initialize the score to 0
+            document.getElementById('score').textContent = "Blocks Destroyed: " + score;
+            starting = document.getElementById('start')
+            starting.remove();
+            var buttons = Array.from(document.querySelectorAll('.button'));
+
+            var timer; // Timer variable for resetting score
+
+            setInterval(function () {
+                var activeButtons = buttons.filter(function (button) {
+                    return !button.classList.contains('removed');
+                });
+
+                if (activeButtons.length === 0) {
+                    return; // No active buttons left, exit the function
+                }
+
+                var randomButton = activeButtons[Math.floor(Math.random() * activeButtons.length)];
+                randomButton.style.backgroundColor = '#ff9900';
+                setTimeout(function () {
+                    randomButton.style.backgroundColor = ''; // Remove the background color
+                    resetScore(); // Reset the score when time runs out
+                }, 800);
+                randomButton.addEventListener('click', function () {
+                    if (this.style.backgroundColor === 'rgb(255, 153, 0)') { // Check if button is yellow
+                        document.getElementById('score').textContent = "Blocks Destroyed: " + ++score;
+                        this.style.backgroundColor = '#8A2BE2';
+                        this.classList.add('removed');
+                        this.classList.remove('button');
+                        this.id = '';
+                        clearTimeout(timer); // Clear the timer
+                    }
+                });
+
+                resetScore(); // Start the timer
+            }, 800); // Generate a new choice every 2 seconds
+
+            function resetScore() {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    score = 0; // Reset the score to 0
+                    document.getElementById('score').textContent = score;
+                }, 800);
+            }
+
+            // Timer functionality
+            var timerElement = document.getElementById('timer');
+            var startTime = Date.now();
+
+            function updateTimer() {
+                var currentTime = Date.now();
+                var elapsedTime = Math.floor((currentTime - startTime) / 1000);
+                var minutes = Math.floor(elapsedTime / 60);
+                var seconds = elapsedTime % 60;
+
+                timerElement.textContent = 'Time: ' + minutes.toString().padStart(2, '0') + '.' + seconds.toString().padStart(2, '0');
+
+                setTimeout(updateTimer, 1000); // Update the timer every second
+            }
+
+            updateTimer();
+        }
+    </script>
+</body>
+</html>
